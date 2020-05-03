@@ -54,18 +54,17 @@ namespace Movies
         /// <returns>List of all movies specified by search term</returns>
         public static IEnumerable<Movie> Search(string terms)
         {
-            List<Movie> results = new List<Movie>();
+            var Movies = MovieDatabase.All;
 
-            if (terms == null) return All;
-            foreach(Movie movie in All)
-            {
-                if(movie.Title != null && movie.Title.Contains(terms, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    results.Add(movie);
-                }
+            Movies = MovieDatabase.All;
+            // Search movie titles for the SearchTerms
+            if(terms != null) {
+                Movies = Movies.Where(movie =>
+                    movie.Title != null &&
+                    movie.Title.Contains(terms, StringComparison.InvariantCultureIgnoreCase));
             }
 
-            return results;
+            return Movies;
         }
 
         /// <summary>
@@ -77,16 +76,10 @@ namespace Movies
         public static IEnumerable<Movie> FilterByMPAARating(IEnumerable<Movie> movies, IEnumerable<string> ratings)
         {
             if (ratings == null || ratings.Count() == 0) return movies;
-            List<Movie> results = new List<Movie>();
-            foreach(Movie movie in movies)
-            {
-                if(movie.MPAARating != null && ratings.Contains(movie.MPAARating))
-                {
-                    results.Add(movie);
-                }
-            }
 
-            return results;
+            return movies.Where(movie =>
+                movie.MPAARating != null && ratings.Contains(movie.MPAARating)
+                );
         }
 
         /// <summary>
@@ -98,16 +91,10 @@ namespace Movies
         public static IEnumerable<Movie> FilterByGenre(IEnumerable<Movie> movies, IEnumerable<string> genreList)
         {
             if (genreList == null || genreList.Count() == 0) return movies;
-            List<Movie> results = new List<Movie>();
-            foreach(Movie movie in movies)
-            {
-                if(movie.MajorGenre != null && genreList.Contains(movie.MajorGenre))
-                {
-                    results.Add(movie);
-                }
-            }
 
-            return results;
+            return movies.Where(movie =>
+                movie.MajorGenre != null && genreList.Contains(movie.MajorGenre)
+                );
         }
 
         /// <summary>
@@ -120,32 +107,14 @@ namespace Movies
         public static IEnumerable<Movie> FilterByIMDBRating(IEnumerable<Movie> movies, double? min, double? max)
         {
             if (min == null && max == null) return movies;
+            else if (min == null) min = 0;
+            else if (max == null) max = Double.MaxValue;
 
             List<Movie> results = new List<Movie>();
 
-            if(min == null)
-            {
-                foreach(Movie movie in movies)
-                {
-                    if (movie.IMDBRating <= max) results.Add(movie);
-                }
-            }
-            else if(max == null)
-            {
-                foreach(Movie movie in movies)
-                {
-                    if (movie.IMDBRating >= min) results.Add(movie);
-                }
-            }
-            else
-            {
-                foreach(Movie movie in movies)
-                {
-                    if (movie.IMDBRating >= min && movie.IMDBRating <= max) results.Add(movie);
-                }
-            }
-
-            return results;
+            return movies.Where(movie =>
+                movie.IMDBRating >= min && movie.IMDBRating <= max
+                );
         }
 
         /// <summary>
@@ -158,32 +127,12 @@ namespace Movies
         public static IEnumerable<Movie> FilterByRottenRating(IEnumerable<Movie> movies, double? min, double? max)
         {
             if (min == null && max == null) return movies;
+            else if (min == null) min = 0;
+            else if (max == null) max = Double.MaxValue;
 
-            List<Movie> results = new List<Movie>();
-
-            if(min == null)
-            {
-                foreach(Movie movie in movies)
-                {
-                    if (movie.RottenTomatoesRating <= max) results.Add(movie);
-                }
-            }
-            else if(max == null)
-            {
-                foreach(Movie movie in movies)
-                {
-                    if (movie.RottenTomatoesRating >= min) results.Add(movie);
-                }
-            }
-            else
-            {
-                foreach(Movie movie in movies)
-                {
-                    if (movie.RottenTomatoesRating >= min && movie.RottenTomatoesRating <= max) results.Add(movie);
-                }
-            }
-
-            return results;
+            return movies.Where(movie =>
+                movie.RottenTomatoesRating >= min && movie.RottenTomatoesRating <= max
+                );
         }
 
 
