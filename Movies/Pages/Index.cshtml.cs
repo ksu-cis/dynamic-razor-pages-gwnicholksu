@@ -12,19 +12,16 @@ namespace Movies.Pages
         /// <summary>
         /// Selected ratings to show
         /// </summary>
-        [BindProperty]
         public string[] MPAARatings { get; set; }
 
         /// <summary>
         /// Selected Genres to show
         /// </summary>
-        [BindProperty]
         public string[] Genres { get; set; }
 
         /// <summary>
         /// The current search terms
         /// </summary>
-        [BindProperty]
         public string SearchTerms { get; set; } = "";
 
         /// <summary>
@@ -56,8 +53,11 @@ namespace Movies.Pages
         /// </summary>
         public IEnumerable<Movie> Movies { get; protected set; }
 
-        public void OnGet(double? IMDBMin, double? IMDBMax, double? RottenMax, double? RottenMin)
+        public void OnGet(double? IMDBMin, double? IMDBMax, double? RottenMax, double? RottenMin, string[] MPAARatings, string[] Genres, string SearchTerms)
         {
+            this.SearchTerms = SearchTerms;
+            this.Genres = Genres;
+            this.MPAARatings = MPAARatings;
             this.IMDBMin = IMDBMin;
             this.IMDBMax = IMDBMax;
             this.RottenMax = RottenMax;
